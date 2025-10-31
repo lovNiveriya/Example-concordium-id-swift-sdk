@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9CF0F3032EAE0FD500F40F1E /* concordium-id-swift-sdk in Frameworks */ = {isa = PBXBuildFile; productRef = 9CF0F3022EAE0FD500F40F1E /* concordium-id-swift-sdk */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		9CAACE092E96BE69003180B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CF0F3032EAE0FD500F40F1E /* concordium-id-swift-sdk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = ExampleAppCodum;
 			packageProductDependencies = (
+				9CF0F3022EAE0FD500F40F1E /* concordium-id-swift-sdk */,
 			);
 			productName = ExampleAppCodum;
 			productReference = 9CAACDFB2E96BE67003180B4 /* ExampleAppCodum.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 9CAACDF22E96BE67003180B4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9CF0F3012EAE0FD500F40F1E /* XCLocalSwiftPackageReference "../Dev/concordium-id-swift-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9CAACDFC2E96BE67003180B4 /* Products */;
 			projectDirPath = "";
@@ -578,6 +587,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		9CF0F3012EAE0FD500F40F1E /* XCLocalSwiftPackageReference "../Dev/concordium-id-swift-sdk" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../Dev/concordium-id-swift-sdk";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9CF0F3022EAE0FD500F40F1E /* concordium-id-swift-sdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "concordium-id-swift-sdk";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9CAACDF32E96BE67003180B4 /* Project object */;
 }
