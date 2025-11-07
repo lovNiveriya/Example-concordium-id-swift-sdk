@@ -7,6 +7,7 @@
 
 import SwiftUI
 import concordium_id_swift_sdk
+import ConcordiumWalletCrypto
 
 struct ContentView: View {
     @State private var output: String = ""
@@ -31,7 +32,6 @@ struct ContentView: View {
             Text("IDAppSDKiOS Demo")
                 .font(.title)
                 .fontWeight(.bold)
-
             // MARK: - Simplified Controls
             Button("OpenDeepLink Popup") {
                 popupType = .qrCode
@@ -100,11 +100,11 @@ struct ContentView: View {
             VStack {
                 switch type {
                 case .qrCode:
-                    ConcordiumIDAppPoup.invokeIdAppDeepLinkPopup(
+                    ConcordiumIDAppPopup.invokeIdAppDeepLinkPopup(
                         walletConnectUri: "wc:1234567890abcdef@2?relay-protocol=irn&symKey=abcdef1234567890"
                     )
                 case .createRecover:
-                    ConcordiumIDAppPoup.invokeIdAppActionsPopup(
+                    ConcordiumIDAppPopup.invokeIdAppActionsPopup(
                         onCreateAccount: {
                             print("Create account tapped")
                         },
@@ -114,14 +114,14 @@ struct ContentView: View {
                         walletConnectSessionTopic: walletConnectSessionTopic
                     )
                 case .createOnly:
-                    ConcordiumIDAppPoup.invokeIdAppActionsPopup(
+                    ConcordiumIDAppPopup.invokeIdAppActionsPopup(
                         onCreateAccount: {
                             print("Create account tapped")
                         },
                         walletConnectSessionTopic: walletConnectSessionTopic
                     )
                 case .recoverOnly:
-                    ConcordiumIDAppPoup.invokeIdAppActionsPopup(
+                    ConcordiumIDAppPopup.invokeIdAppActionsPopup(
                         onRecoverAccount: {
                             print("Recover account tapped")
                         }
@@ -141,11 +141,10 @@ struct ContentView: View {
             .presentationDragIndicator(.visible)
             .presentationBackground(Color.white)
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ConcordiumIDAppPoupClose"))) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ConcordiumIDAppPopupClose"))) { _ in
             // Dismiss the sheet when SDK requests close
             popupType = nil
         }
-        //.frame(maxWidth: .infinity, maxHeight: .infinity)
         .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Error"),
@@ -154,10 +153,6 @@ struct ContentView: View {
             )
         }
     }
-}
-
-#Preview {
-    ContentView()
 }
 
 // MARK: - Custom Button Style
@@ -172,5 +167,14 @@ struct ActionButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.85 : 1.0)
     }
 }
+/*
+ Task {
+     do {
+         let hash = try await ConcordiumIDAppSDK.signAndSubmit(accountIndex: 0, seedPhrase: "guide birth situate smooth sheriff toe daring february rely sign answer rebel message sock brush foam trigger apology hammer relax gallery great goat enforce", expiry: 1762501117, unsignedCdiStr: "", network: .testnet)
 
-// (Reverted custom sheet content)
+         let keys = try await ConcordiumIDAppSDK.generateAccountWithSeedPhrase(from: "guide birth situate smooth sheriff toe daring february rely sign answer rebel message sock brush foam trigger apology hammer relax gallery great goat enforce", network: .testnet, accountIndex: 0)
+     } catch {
+         print(error.localizedDescription)
+     }
+ }
+ */
