@@ -13,16 +13,13 @@ struct ContentView: View {
     @State private var output: String = ""
     @State private var popupType: PopupType? = nil
     @State private var shouldCreate: Bool = false
-    @State private var shouldRecover: Bool = false
     @State private var walletConnectSessionTopic: String = ""
     @State private var showErrorAlert: Bool = false
     @State private var errorMessage: String = ""
 
     enum PopupType: Identifiable {
         case qrCode
-        case createRecover
         case createOnly
-        case recoverOnly
         
         var id: Int { hashValue }
     }
@@ -40,13 +37,12 @@ struct ContentView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Toggle("Create account", isOn: $shouldCreate)
-                Toggle("Recover account", isOn: $shouldRecover)
             }
             .padding(.horizontal, 4)
 
-            // Session topic field (required for Create and Both)
+            // Session topic field (required for Create)
             VStack(alignment: .leading, spacing: 6) {
-                Text("WalletConnect session topic (required for Create/Both)")
+                Text("WalletConnect session topic (required for Create)")
                     .font(.footnote)
                     .foregroundColor(.secondary)
                 TextField("Enter session topic", text: $walletConnectSessionTopic)
@@ -55,30 +51,22 @@ struct ContentView: View {
             .padding(.horizontal, 4)
 
             Button("OpenActionPopup") {
-                // Validation: at least one option must be selected
-                guard shouldCreate || shouldRecover else {
-                    errorMessage = "Please select at least one option (Create or Recover)."
+                // Validation: Create option must be selected
+                guard shouldCreate else {
+                    errorMessage = "Please select Create account option."
                     showErrorAlert = true
                     return
                 }
 
-                // If Create or Both selected, session topic must be provided
-                if shouldCreate {
-                    let topicTrimmed = walletConnectSessionTopic.trimmingCharacters(in: .whitespacesAndNewlines)
-                    guard !topicTrimmed.isEmpty else {
-                        errorMessage = "WalletConnect session topic is required for Create account."
-                        showErrorAlert = true
-                        return
-                    }
+                // Session topic must be provided for Create
+                let topicTrimmed = walletConnectSessionTopic.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !topicTrimmed.isEmpty else {
+                    errorMessage = "WalletConnect session topic is required for Create account."
+                    showErrorAlert = true
+                    return
                 }
 
-                if shouldCreate && shouldRecover {
-                    popupType = .createRecover
-                } else if shouldCreate {
-                    popupType = .createOnly
-                } else if shouldRecover {
-                    popupType = .recoverOnly
-                }
+                popupType = .createOnly
             }
             .buttonStyle(ActionButtonStyle())
 
@@ -95,6 +83,7 @@ struct ContentView: View {
             }
             .frame(height: 220)
         }
+        
         .padding()
         .sheet(item: $popupType) { type in
             VStack {
@@ -103,28 +92,12 @@ struct ContentView: View {
                     ConcordiumIDAppPopup.invokeIdAppDeepLinkPopup(
                         walletConnectUri: "wc:1234567890abcdef@2?relay-protocol=irn&symKey=abcdef1234567890"
                     )
-                case .createRecover:
-                    ConcordiumIDAppPopup.invokeIdAppActionsPopup(
-                        onCreateAccount: {
-                            print("Create account tapped")
-                        },
-                        onRecoverAccount: {
-                            print("Recover account tapped")
-                        },
-                        walletConnectSessionTopic: walletConnectSessionTopic
-                    )
                 case .createOnly:
                     ConcordiumIDAppPopup.invokeIdAppActionsPopup(
                         onCreateAccount: {
                             print("Create account tapped")
                         },
                         walletConnectSessionTopic: walletConnectSessionTopic
-                    )
-                case .recoverOnly:
-                    ConcordiumIDAppPopup.invokeIdAppActionsPopup(
-                        onRecoverAccount: {
-                            print("Recover account tapped")
-                        }
                     )
                 }
             }
@@ -133,7 +106,7 @@ struct ContentView: View {
             .presentationDetents(
                 type == .qrCode
                     ? [.fraction(0.97)]
-                    : (type == .recoverOnly ? [.height(320)] : [.height(520)])
+                    : [.height(520)]
             )
 
             .presentationCompactAdaptation(.sheet)
